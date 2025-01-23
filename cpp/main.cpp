@@ -63,13 +63,15 @@ void insertAtHead(Node* &head, int val) {
 void insertAtEnd(Node* &head, int val) {
     Node* newNode = createNode(val);
     if (isEmpty(head)) {
-        head = newNode;
-        cout << "Inserted " << val << " at Head Node" << endl;
+        insertAtHead(head, val);
+        return;
     } else {
         Node* temp = head;
+
         while (temp -> next != NULL) {
             temp = temp -> next;
         }
+
         temp -> next = newNode;
         newNode -> prev = temp;
         cout << "Inserted " << val << " at end" << endl;
@@ -84,14 +86,17 @@ void insertAtAnyPosition(Node* &head, int pos, int val) {
     } else {
         Node* temp = head;
         int currentPos = 0;
+
         while (temp != NULL && currentPos < pos - 1) {
             temp = temp->next;
             currentPos++;
         }
+
         if (temp == NULL || temp->next == NULL) {
             insertAtTail(head, val);
             return;
         }
+
         newNode->next = temp->next;
         temp->next->prev = newNode;
         temp->next = newNode;
@@ -101,6 +106,80 @@ void insertAtAnyPosition(Node* &head, int pos, int val) {
 }
 
 // * Deletions in Doubly Linked-list *
+
+void deleteHead(Node* &head) {
+    if (isEmpty(head)) {
+        cout << "List is empty! Nothing to delete.\n";
+        return;
+    } else {
+        Node* temp = head;
+        head = head -> next;
+
+        if (head != NULL) {
+            head -> prev = NULL;
+        }
+
+        cout << "Deleted head node with value " << temp->data << endl;
+        delete temp;
+    }
+}
+
+void deleteTail(Node* &head) {
+    if (isEmpty(head)) {
+        cout << "List is empty! Nothing to delete.\n";
+        return;
+    } else {
+        Node* temp = head;
+
+        while (temp -> next != NULL) {
+            temp = temp -> next;
+        }
+
+        if (temp->prev == NULL) {
+            head = NULL;
+        } else {
+            temp->prev->next = NULL;
+        }
+
+        cout << "Deleted tail node with value " << temp->data << endl;
+        delete temp;
+    }
+}
+
+void deleteAtPosition(Node*& head, int pos) {
+    if (isEmpty(head)) {
+        cout << "List is empty! Nothing to delete.\n";
+        return;
+    }
+
+    if (pos == 0) {
+        deleteHead(head);
+        return;
+    }
+
+    Node* temp = head;
+    int currentPos = 0;
+
+    while (temp != NULL && currentPos < pos - 1) {
+        temp = temp->next;
+        currentPos++;
+    }
+
+    if (temp == NULL || temp->next == NULL) {
+        cout << "Invalid position! No node exists at position " << pos << ".\n";
+        return;
+    }
+
+    Node* nodeToDelete = temp->next;
+    temp->next = nodeToDelete->next;
+
+    if (nodeToDelete->next != NULL) {
+        nodeToDelete->next->prev = temp;
+    }
+
+    cout << "Deleted node at position " << pos << " with value " << nodeToDelete->data << endl;
+    delete nodeToDelete;
+}
 
 int main() {
     Node* head = NULL;
@@ -141,15 +220,15 @@ int main() {
                 insertAtAnyPosition(head, pos, val);
                 break;
             case 4:
-                // deleteHead();
+                deleteHead(head);
                 break;
             case 5:
-                // deleteTail();
+                deleteTail(head);
                 break;
             case 6:
                 cout << "Enter position to delete: ";
                 cin >> pos;
-                // deleteAtPosition(pos);
+                deleteAtPosition(head, pos);
                 break;
             case 7:
                 // traverseForward();
