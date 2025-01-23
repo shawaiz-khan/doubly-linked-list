@@ -1,22 +1,33 @@
 #include <iostream>
 using namespace std;
 
+int key = 0;
+
 class Node {
     public:
         int data;
+        int key;
         Node* next;
         Node* prev;
+        int generateKey();
         Node() {
             data = 0;
+            key = generateKey();
             next = NULL;
             prev = NULL;
         }
         Node(int val) {
             data = val;
+            key = generateKey();
             next = NULL;
             prev = NULL;
         }
 };
+
+int Node::generateKey() {
+    key++;
+    return key;
+}
 
 bool isEmpty(Node* head) {
     if (head == NULL) {
@@ -61,6 +72,8 @@ void insertAtEnd(Node* &head, int val) {
     }
 }
 
+void insertAtAnyPosition();
+
 int main() {
     Node* head = NULL;
     int choice, val, pos;
@@ -90,7 +103,7 @@ int main() {
             case 2:
                 cout << "Enter value to insert at end: ";
                 cin >> val;
-                // insertAtTail(head, val);
+                insertAtEnd(head, val);
                 break;
             case 3:
                 cout << "Enter position and value to insert: ";
