@@ -181,6 +181,49 @@ void deleteAtPosition(Node*& head, int pos) {
     delete nodeToDelete;
 }
 
+// * Search & Display in Doubly Linked-list *
+
+void search(Node* head, int val) {
+    if (isEmpty(head)) {
+        cout << "List is empty! Nothing to search.\n";
+        return;
+    }
+
+    Node* temp = head;
+    int pos = 0;
+
+    while (temp != NULL) {
+        if (temp->data == val) {
+            cout << "Value " << val << " found at position " << pos << endl;
+            return;
+        }
+        temp = temp->next;
+        pos++;
+    }
+
+    cout << "Value " << val << " not found in the list.\n";
+}
+
+void display(Node* head) {
+    if (isEmpty(head)) {
+        cout << "List is empty!" << endl;
+        return;
+    }
+
+    Node* temp = head;
+    cout << "List: ";
+
+    while (temp != NULL) {
+        cout << temp->data;
+        if (temp->next != NULL) {
+            cout << " -> ";
+        }
+        temp = temp->next;
+    }
+
+    cout << " -> NULL" << endl;
+}
+
 int main() {
     Node* head = NULL;
     int choice, val, pos;
@@ -193,11 +236,9 @@ int main() {
         cout << "4. Delete Head" << endl;
         cout << "5. Delete Tail" << endl;
         cout << "6. Delete at Position" << endl;
-        cout << "7. Traverse Forward" << endl;
-        cout << "8. Traverse Backward" << endl;
-        cout << "9. Display List" << endl;
-        cout << "10. Search Value" << endl;
-        cout << "0. Exit" << endl;
+        cout << "7. Search Value" << endl;
+        cout << "8. Display List" << endl;
+        cout << "9. Exit" << endl;
         cout << "Enter your choice: " << endl;
         cin >> choice;
 
@@ -231,26 +272,20 @@ int main() {
                 deleteAtPosition(head, pos);
                 break;
             case 7:
-                // traverseForward();
+                cout << "Enter Value to search: ";
+                cin >> val;
+                search(head, val);
                 break;
             case 8:
-                // traverseBackward();
+                display(head);
                 break;
             case 9:
-                // display();
-                break;
-            case 10:
-                cout << "Enter value to search: ";
-                cin >> val;
-                // search(val);
-                break;
-            case 0:
                 cout << "Exiting program...";
                 break;
             default:
                 cout << "Invalid choice! Please try again.";
         }
-    } while (choice != 0);
+    } while (choice != 9);
 
     return 0;
 }
