@@ -29,6 +29,8 @@ int Node::generateKey() {
     return key;
 }
 
+// * Utility Functions in Doubly Linked-list *
+
 bool isEmpty(Node* head) {
     if (head == NULL) {
         return true;
@@ -41,6 +43,8 @@ Node* createNode(int val) {
     Node* newNode = new Node(val);
     return newNode;
 }
+
+// * Insertions in Doubly Linked-list *
 
 void insertAtHead(Node* &head, int val) {
     Node* newNode = createNode(val);
@@ -72,7 +76,31 @@ void insertAtEnd(Node* &head, int val) {
     }
 }
 
-void insertAtAnyPosition();
+void insertAtAnyPosition(Node* &head, int pos, int val) {
+    Node* newNode = createNode(val);
+    if (pos == 0) {
+        insertAtHead(head, val);
+        return;
+    } else {
+        Node* temp = head;
+        int currentPos = 0;
+        while (temp != NULL && currentPos < pos - 1) {
+            temp = temp->next;
+            currentPos++;
+        }
+        if (temp == NULL || temp->next == NULL) {
+            insertAtTail(head, val);
+            return;
+        }
+        newNode->next = temp->next;
+        temp->next->prev = newNode;
+        temp->next = newNode;
+        newNode->prev = temp;
+        cout << "Inserted " << val << " at position " << pos << endl;
+    }
+}
+
+// * Deletions in Doubly Linked-list *
 
 int main() {
     Node* head = NULL;
@@ -106,9 +134,11 @@ int main() {
                 insertAtEnd(head, val);
                 break;
             case 3:
-                cout << "Enter position and value to insert: ";
-                cin >> pos >> val;
-                // insertAtPosition(pos, val);
+                cout << "Enter Position to insert: ";
+                cin >> pos;
+                cout << "Enter Value to insert: ";
+                cin >> val;
+                insertAtAnyPosition(head, pos, val);
                 break;
             case 4:
                 // deleteHead();
