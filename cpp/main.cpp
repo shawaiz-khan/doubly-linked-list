@@ -1,149 +1,130 @@
 #include <iostream>
 using namespace std;
 
-int key = 0;
-
 class Node {
-    public:
-        int data;
-        int key;
-        Node* next;
-        Node* prev;
-        int generateKey();
-        Node() {
-            data = 0;
-            key = generateKey();
-            next = NULL;
-            prev = NULL;
-        }
-        Node(int val) {
-            data = val;
-            key = generateKey();
-            next = NULL;
-            prev = NULL;
-        }
+public:
+    int data;
+    int key;
+    Node* next;
+    Node* prev;
+    
+    Node(int val);
+    static int generateKey();
 };
 
 int Node::generateKey() {
-    key++;
-    return key;
+    static int keyCounter = 0;
+    return ++keyCounter;
+}
+
+Node::Node(int val) {
+    data = val;
+    key = generateKey();
+    next = NULL;
+    prev = NULL;
 }
 
 // * Utility Functions in Doubly Linked-list *
-
 bool isEmpty(Node* head) {
-    if (head == NULL) {
-        return true;
-    } else {
-        return false;
-    }
+    return (head == NULL);
 }
 
 Node* createNode(int val) {
-    Node* newNode = new Node(val);
-    return newNode;
+    return new Node(val);
 }
 
 // * Insertions in Doubly Linked-list *
-
-void insertAtHead(Node* &head, int val) {
+void insertAtHead(Node*& head, int val) {
     Node* newNode = createNode(val);
-    if(isEmpty(head)) {
+    if (isEmpty(head)) {
         head = newNode;
-        cout << "Inserted " << val << " at Head Node" << endl;
     } else {
-        Node* temp = head;
         newNode->next = head;
         head->prev = newNode;
         head = newNode;
-        cout << "Inserted " << val << " at the beginning" << endl;
     }
+    cout << "Inserted " << val << " at the beginning" << endl;
 }
 
-void insertAtEnd(Node* &head, int val) {
+void insertAtEnd(Node*& head, int val) {
     Node* newNode = createNode(val);
     if (isEmpty(head)) {
         insertAtHead(head, val);
         return;
-    } else {
-        Node* temp = head;
-
-        while (temp -> next != NULL) {
-            temp = temp -> next;
-        }
-
-        temp -> next = newNode;
-        newNode -> prev = temp;
-        cout << "Inserted " << val << " at end" << endl;
     }
+
+    Node* temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+
+    temp->next = newNode;
+    newNode->prev = temp;
+    cout << "Inserted " << val << " at end" << endl;
 }
 
-void insertAtAnyPosition(Node* &head, int pos, int val) {
-    Node* newNode = createNode(val);
+void insertAtAnyPosition(Node*& head, int pos, int val) {
     if (pos == 0) {
         insertAtHead(head, val);
         return;
-    } else {
-        Node* temp = head;
-        int currentPos = 0;
-
-        while (temp != NULL && currentPos < pos - 1) {
-            temp = temp->next;
-            currentPos++;
-        }
-
-        if (temp == NULL || temp->next == NULL) {
-            insertAtTail(head, val);
-            return;
-        }
-
-        newNode->next = temp->next;
-        temp->next->prev = newNode;
-        temp->next = newNode;
-        newNode->prev = temp;
-        cout << "Inserted " << val << " at position " << pos << endl;
     }
+
+    Node* temp = head;
+    int currentPos = 0;
+    while (temp != NULL && currentPos < pos - 1) {
+        temp = temp->next;
+        currentPos++;
+    }
+
+    if (temp == NULL || temp->next == NULL) {
+        insertAtEnd(head, val);
+        return;
+    }
+
+    Node* newNode = createNode(val);
+    newNode->next = temp->next;
+    temp->next->prev = newNode;
+    temp->next = newNode;
+    newNode->prev = temp;
+    cout << "Inserted " << val << " at position " << pos << endl;
 }
 
 // * Deletions in Doubly Linked-list *
-
-void deleteHead(Node* &head) {
+void deleteHead(Node*& head) {
     if (isEmpty(head)) {
         cout << "List is empty! Nothing to delete.\n";
         return;
-    } else {
-        Node* temp = head;
-        head = head -> next;
-
-        if (head != NULL) {
-            head -> prev = NULL;
-        }
-
-        cout << "Deleted head node with value " << temp->data << endl;
-        delete temp;
     }
+
+    Node* temp = head;
+    head = head->next;
+    if (head != NULL) {
+        head->prev = NULL;
+    }
+
+    cout << "Deleted head node with value " << temp->data << endl;
+    delete temp;
 }
 
-void deleteTail(Node* &head) {
+void deleteTail(Node*& head) {
     if (isEmpty(head)) {
         cout << "List is empty! Nothing to delete.\n";
         return;
-    } else {
-        Node* temp = head;
-
-        while (temp -> next != NULL) {
-            temp = temp -> next;
-        }
-
-        if (temp->prev == NULL) {
-            head = NULL;
-        } else {
-            temp->prev->next = NULL;
-        }
-
-        cout << "Deleted tail node with value " << temp->data << endl;
-        delete temp;
     }
+
+    Node* temp = head;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+
+    if (temp->prev == NULL) {
+        head = NULL;
+    } else {
+        temp->prev->next = NULL;
+    }
+
+    cout << "Deleted tail node with value " << temp->data << endl;
+    delete temp;
 }
 
 void deleteAtPosition(Node*& head, int pos) {
@@ -159,7 +140,6 @@ void deleteAtPosition(Node*& head, int pos) {
 
     Node* temp = head;
     int currentPos = 0;
-
     while (temp != NULL && currentPos < pos - 1) {
         temp = temp->next;
         currentPos++;
@@ -182,7 +162,6 @@ void deleteAtPosition(Node*& head, int pos) {
 }
 
 // * Search & Display in Doubly Linked-list *
-
 void search(Node* head, int val) {
     if (isEmpty(head)) {
         cout << "List is empty! Nothing to search.\n";
@@ -229,61 +208,59 @@ int main() {
     int choice, val, pos;
 
     do {
-        cout << endl << "===== Doubly Linked List Menu =====" << endl;
-        cout << "1. Insert at Beginning" << endl;
-        cout << "2. Insert at End" << endl;
-        cout << "3. Insert at Position" << endl;
-        cout << "4. Delete Head" << endl;
-        cout << "5. Delete Tail" << endl;
-        cout << "6. Delete at Position" << endl;
-        cout << "7. Search Value" << endl;
-        cout << "8. Display List" << endl;
-        cout << "9. Exit" << endl;
-        cout << "Enter your choice: " << endl;
+        cout << "\n===== Doubly Linked List Menu =====\n";
+        cout << "1. Insert at Beginning\n";
+        cout << "2. Insert at End\n";
+        cout << "3. Insert at Position\n";
+        cout << "4. Delete Head\n";
+        cout << "5. Delete Tail\n";
+        cout << "6. Delete at Position\n";
+        cout << "7. Search Value\n";
+        cout << "8. Display List\n";
+        cout << "9. Exit\n";
+        cout << "Enter your choice: ";
         cin >> choice;
 
         switch (choice) {
-            case 1:
-                cout << "Enter value to insert at beginning: ";
-                cin >> val;
-                insertAtHead(head, val);
+            case 1: 
+                cout << "Enter value: "; 
+                cin >> val; 
+                insertAtHead(head, val); 
                 break;
-            case 2:
-                cout << "Enter value to insert at end: ";
-                cin >> val;
-                insertAtEnd(head, val);
+            case 2: 
+                cout << "Enter value: "; 
+                cin >> val; 
+                insertAtEnd(head, val); 
                 break;
-            case 3:
-                cout << "Enter Position to insert: ";
-                cin >> pos;
-                cout << "Enter Value to insert: ";
-                cin >> val;
-                insertAtAnyPosition(head, pos, val);
+            case 3: 
+                cout << "Enter position & value: "; 
+                cin >> pos >> val; 
+                insertAtAnyPosition(head, pos, val); 
                 break;
-            case 4:
-                deleteHead(head);
+            case 4: 
+                deleteHead(head); 
                 break;
-            case 5:
-                deleteTail(head);
+            case 5: 
+                deleteTail(head); 
                 break;
-            case 6:
-                cout << "Enter position to delete: ";
-                cin >> pos;
-                deleteAtPosition(head, pos);
+            case 6: 
+                cout << "Enter position: "; 
+                cin >> pos; 
+                deleteAtPosition(head, pos); 
                 break;
-            case 7:
-                cout << "Enter Value to search: ";
-                cin >> val;
-                search(head, val);
+            case 7: 
+                cout << "Enter value: "; 
+                cin >> val; 
+                search(head, val); 
                 break;
-            case 8:
-                display(head);
+            case 8: 
+                display(head); 
                 break;
-            case 9:
-                cout << "Exiting program...";
+            case 9: 
+                cout << "Exiting program...\n"; 
                 break;
-            default:
-                cout << "Invalid choice! Please try again.";
+            default: 
+                cout << "Invalid choice! Try again.\n";
         }
     } while (choice != 9);
 
